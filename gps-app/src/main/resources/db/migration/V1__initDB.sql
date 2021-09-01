@@ -2,7 +2,8 @@ CREATE TABLE public.vehicle
 (
     id   uuid        NOT NULL,
     name varchar(50) NOT NULL,
-    CONSTRAINT vehicle_pk PRIMARY KEY (id)
+    CONSTRAINT vehicle_pk PRIMARY KEY (id),
+    CONSTRAINT name_uniq UNIQUE (name)
 
 );
 ALTER TABLE public.vehicle
