@@ -106,6 +106,9 @@ public class TrackerServiceImpl implements TrackerService {
                 isInsideCluster = false;
             }
         }
+        if (preResult.compareTo(result) > 0) {
+            result.setData(preResult);
+        }
 
         return result;
     }
