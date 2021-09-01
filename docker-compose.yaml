@@ -1,0 +1,45 @@
+volumes:
+  postgres_volume:
+  gps_app_build_volume:
+
+services:
+  gps_app_build:
+    build: gps-app/
+    volumes:
+      - gps_app_build_volume:/usr/app/gps/build/libs/
+    depends_on:
+      - postgres
+    networks:
+      - default_network
+
+  gps_app:
+    image: jetty:${JETTY_VERSION}
+    volumes:
+      - gps_app_build_volume:/var/lib/jetty/webapps
+    environment:
+      - POSTGRES_DB_HOST=postgres
+      - POSTGRES_DB_PORT=5432
+    depends_on:
+      - postgres
+      - gps_app_build
+    ports:
+      - ${SERVER_PORT}:8080
+    networks:
+      - default_network
+
+  postgres:
+    image: postgres:${POSTGRES_VERSION}
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=maxoptra_gps_db
+      - POSTGRES_USER=maxoptra_gps_app
+      - POSTGRES_PASSWORD=maxoptra_gps_app
+    ports:
+      - ${POSTGRES_PORT}:5432
+    networks:
+      - default_network
+
+networks:
+  default_network:
+    name: network
